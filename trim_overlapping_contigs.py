@@ -9,27 +9,7 @@ import csv
 
 file_name = sys.argv[1]
 infile = pysam.AlignmentFile(file_name, "rb")
-#file not sorted
-
-#outfile_name = "mm2_hg38_asm5_woSed_assem2_nool.bam"
-#outfile_name = sys.argv[2]
-
-infile_name_base=os.path.basename(file_name)
-outfile_name_wo_ext = os.path.splitext(infile_name_base)[0]
-
-outfile_name = outfile_name_wo_ext + "_nool.bam"
-
-#output_dir = "assemblies/HG00096"
-output_dir = sys.argv[2] + "/"
-
-outfile = pysam.AlignmentFile(output_dir + outfile_name, "wb", template=infile)
-
-#if_hg38 = True
-if_hg38_str = sys.argv[3]
-if if_hg38_str == "True":
-    if_hg38 = True
-else:
-    if_hg38 = False
+outfile = pysam.AlignmentFile(sys.stdout, "wb", template=infile)
 
 #sort contigs by length from short to long
 def mergesort_contigs(unsorted_list):
@@ -259,19 +239,7 @@ def trim_by_ol(contig, index, contig_list, remove_list):
     contig_list[index] = contig     
 
 
-if if_hg38:
-    chr_list = ["chr1", "chr2", "chr3", "chr4", "chr5",
-                "chr6", "chr7", "chr8", "chr9", "chr10",
-                "chr11", "chr12", "chr13", "chr14", "chr15",
-                "chr16", "chr17", "chr18", "chr19", "chr20",
-                "chr21", "chr22", "chrX", "chrY"]
-else:
-    chr_list = ["1", "2", "3", "4", "5",
-                "6", "7", "8", "9", "10",
-                "11", "12", "13", "14", "15",
-                "16", "17", "18", "19", "20",
-                "21", "22", "X", "Y"]
-#chr_list = ["2"]
+chr_list = infile.header.references
 
 for chr_index in chr_list:
     if_first = True
@@ -306,7 +274,7 @@ for chr_index in chr_list:
         trim_by_ol(contig, index, contig_list, remove_list)
     
     #test
-    print(chr_index, len(contig_list))
+    print(chr_index, len(contig_list), file=sys.stderr)
     #print(remove_list)
     for index, contig in enumerate(contig_list):
         if remove_list[index] != 1:
@@ -319,7 +287,7 @@ for chr_index in chr_list:
                 if tup[0] in consume_query:
                     consumed_base += tup[1]
             if consumed_base != contig.query_alignment_end - contig.query_alignment_start:
-                print("nooooooooo", consumed_base, contig.query_alignment_end - contig.query_alignment_start)
+                print("nooooooooo", consumed_base, contig.query_alignment_end - contig.query_alignment_start, file=sys.stderr)
             #print(contig.reference_start, contig.reference_end)
             #print(cigar)
     #for i in range(0, 100):

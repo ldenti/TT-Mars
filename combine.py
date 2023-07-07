@@ -1,5 +1,6 @@
 import csv
 import sys
+import os
 
 import argparse
 
@@ -106,12 +107,15 @@ def combine_output():
         #input candidate set
         cand_sv_list = fn.idx_sv(in_vcf_file)
 
+        print(len(sv_list), len(cand_sv_list))
+
         sv_list_sorted = fn.sort_sv_list(sv_list)
         cand_sv_list_sorted = fn.sort_sv_list(cand_sv_list)
 
         tp_base_ctr = fn.count_tp_base_dist_only(sv_list_sorted, cand_sv_list_sorted)
         recall = tp_base_ctr / len(sv_list_sorted)
 
+        print(tp_base_ctr, len(sv_list_sorted))
         print("Recall of candidate callset: " + str(recall))
 
     sv_dict = {}
@@ -187,9 +191,11 @@ def combine_output():
 
     if if_male:
         chrx_res_file = output_dir+"ttmars_chrx_res.txt"
-        with open(chrx_res_file) as f:
-            reader = csv.reader(f, delimiter="\t")
-            chrx_res = list(reader)
+        chrx_res = []
+        if os.path.exists(chrx_res_file):
+            with open(chrx_res_file) as f:
+                reader = csv.reader(f, delimiter="\t")
+                chrx_res = list(reader)
         f.close()
         for rec in chrx_res:
             if len(rec) == 0:

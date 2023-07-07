@@ -95,6 +95,8 @@ def get_int_chr_name(name, if_hg38):
         int_name = 23
     elif chr_name.upper() == 'Y':
         int_name = 24
+    elif chr_name.upper() == 'M':
+        int_name = 25
     else:
         int_name = int(chr_name)
         
@@ -104,7 +106,7 @@ def get_int_chr_name(name, if_hg38):
 def build_map(chr_len, interval, liftover_file, if_hg38):
     contig_name_list = []
     contig_pos_list = []
-    for i in range(1, 25):
+    for i in range(1, 26):
         lo_length = chr_len[i-1]
         #set the initial values to -1
         contig_name_list.append(np.zeros(int(lo_length/interval) + 1, dtype='int16') - 1)
@@ -144,7 +146,7 @@ def build_map(chr_len, interval, liftover_file, if_hg38):
 def build_map_compress(chr_len, interval, liftover_file, if_hg38):
     contig_name_list = []
     contig_pos_list = []
-    for i in range(1, 25):
+    for i in range(1, 26):
         lo_length = chr_len[i-1]
         #set the initial values to -1
         contig_name_list.append(np.zeros(int(lo_length/interval) + 1, dtype='int16') - 1)

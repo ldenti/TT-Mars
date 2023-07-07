@@ -133,7 +133,7 @@ import heapq
 
 import mappy
 import os
-# sys.path.insert(0, '../')
+sys.path.insert(0, '../')
 
 ##########################################################
 ##########################################################
@@ -149,8 +149,8 @@ files_dir = args.files_dir + "/"
 #assembly bam files
 # assem1_non_cov_regions_file = args.assem1_non_cov_regions_file
 # assem2_non_cov_regions_file = args.assem2_non_cov_regions_file
-assem1_non_cov_regions_file = files_dir + "assem1_non_cov_regions.bed"
-assem2_non_cov_regions_file = files_dir + "assem2_non_cov_regions.bed"
+assem1_non_cov_regions_file = files_dir + "hap1.non_covered_regions.bed" # "assem1_non_cov_regions.bed"
+assem2_non_cov_regions_file = files_dir + "hap2.non_covered_regions.bed" # "assem2_non_cov_regions.bed"
 vcf_file = args.vcf_file
 #ref fasta file
 ref_file = args.ref_file
@@ -159,13 +159,13 @@ query_file1 = args.query_file1
 query_file2 = args.query_file2
 # liftover_file1 = args.liftover_file1
 # liftover_file2 = args.liftover_file2
-liftover_file1 = files_dir + "lo_pos_assem1_result_compressed.bed"
-liftover_file2 = files_dir + "lo_pos_assem2_result_compressed.bed"
+liftover_file1 = files_dir + "hap1.lo_pos_result.1.compressed.bed" # "lo_pos_assem1_result_compressed.bed"
+liftover_file2 = files_dir + "hap2.lo_pos_result.1.compressed.bed" # "lo_pos_assem2_result_compressed.bed"
 tandem_file = args.tandem_file
 # liftover_file1_0 = args.liftover_file1_0
 # liftover_file2_0 = args.liftover_file2_0
-liftover_file1_0 = files_dir + "lo_pos_assem1_0_result_compressed.bed"
-liftover_file2_0 = files_dir + "lo_pos_assem2_0_result_compressed.bed"
+liftover_file1_0 = files_dir + "hap1.lo_pos_result.0.compressed.bed" # "lo_pos_assem1_0_result_compressed.bed"
+liftover_file2_0 = files_dir + "hap2.lo_pos_result.0.compressed.bed" # "lo_pos_assem2_0_result_compressed.bed"
 
 ##########################################################
 ##########################################################
@@ -206,10 +206,10 @@ chr_len = [250000000, 244000000, 202000000, 194000000, 183000000,
             173000000, 161000000, 147000000, 151000000, 136000000, 
             136000000, 134000000, 116000000, 108000000, 103000000, 
             96400000, 84300000, 80600000, 61800000, 66300000, 
-            48200000, 51400000, 157000000, 62500000]
+            48200000, 51400000, 157000000, 62500000, 62500000]
 
 #max/min length of allowed SV not DUP
-memory_limit = 99999
+memory_limit = 9999
 memory_min = 10
 #max length of allowed DUP
 dup_memory_limit = 50000

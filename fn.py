@@ -34,9 +34,9 @@ def first_filter(sv, sv_type):
     if sv_type not in valid_types:
         return True
     #PASS filter
-    if if_pass_only:
-        if 'PASS' not in sv.filter.keys():
-            return True
+    # if if_pass_only:
+    #     if 'PASS' not in sv.filter.keys():
+    #         return True
     chr_name = sv.chrom
     #chr filter
     if chr_name not in chr_list:
@@ -242,15 +242,24 @@ class struc_var:
 def idx_sv(input_vcf):
     f = VariantFile(input_vcf,'r')
     sv_list = []
+    ffilter = 0
+    lfilter = 0
+    total = 0
     for count, rec in enumerate(f.fetch()):
+        total += 1
         #get sv_type
-        try:
-            sv_type = rec.info['SVTYPE']
-        except:
-            print("invalid sv type info")
-            continue
+        # try:
+        #     sv_type = rec.info['SVTYPE']
+        # except:
+        if len(rec.ref) - len(rec.alts[0]) < 0:
+            sv_type = "INS"
+        else:
+            sv_type = "DEL"
+        # print("invalid sv type info")
+        # continue
 
         if first_filter(rec, sv_type):
+            ffilter += 1
             continue
 
         #get sv length
@@ -263,7 +272,7 @@ def idx_sv(input_vcf):
                 try:
                     sv_len = rec.info['SVLEN']
                 except:
-                    sv_len = abs(rec.stop - rec.pos + 1)
+                    sv_len = abs(len(rec.ref) - len(rec.alts[0])) # abs(rec.stop - rec.pos + 1)
                     #print("invalid sv length info")
     #         try:
     #             sv_len = rec.info['SVLEN'][0]
@@ -274,6 +283,7 @@ def idx_sv(input_vcf):
             sv_len = -abs(sv_len)
 
         if abs(sv_len) < memory_min:
+            lfilter += 1
             continue
 
         #get gt
@@ -291,9 +301,10 @@ def idx_sv(input_vcf):
     #     gts = [s['GT'] for s in rec.samples.values()] 
 
         sv_list.append(struc_var(count, rec.chrom, sv_type, rec.pos, rec.stop, sv_len, sv_gt))   
-
+    print("L: ", len(sv_list))
     f.close()
     
+    print(ffilter, lfilter, total)
     return sv_list
 
 
